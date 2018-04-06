@@ -15,7 +15,6 @@ class Parameters {
             description = "The password")
     var password: String? = null
 
-
     @Parameter(names = arrayOf("-s", "--server"),
             description = "The server base URL ")
     var server: String? = null
@@ -23,4 +22,10 @@ class Parameters {
     @Parameter(names = arrayOf("-c", "--companyId"),
             description = "The company ID")
     var companyId: Long? = null
+
+    @Parameter(names = arrayOf("-k", "--insecure"),
+            description = "(TLS) By default, every SSL connection katapult makes is verified to be secure. " +
+                "This option allows katapult to proceed and operate even for server connections " +
+                "otherwise considered insecure")
+    var insecure: Boolean = false
 }

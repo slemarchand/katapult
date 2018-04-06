@@ -19,6 +19,10 @@ open class JSONWebServiceInvoker {
 
     constructor(restTemplate: RestTemplate) {
         this.restTemplate  = restTemplate
+
+        if(Application.parameters.insecure) {
+            SSLUtil.acceptInsecureConnections()
+        }
     }
 
     fun invoke(json: String) {
