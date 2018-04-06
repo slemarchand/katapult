@@ -1,0 +1,1 @@
+<#macro json_string str>"${str?js_string?replace("\\'", "\'")?replace("\\>", ">")}"</#macro>
