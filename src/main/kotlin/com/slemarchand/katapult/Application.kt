@@ -3,6 +3,7 @@ package com.slemarchand.katapult
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import com.beust.jcommander.JCommander
+import org.springframework.boot.Banner
 import org.springframework.boot.autoconfigure.batch.BasicBatchConfigurer
 import org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -30,5 +31,7 @@ fun main(args: Array<String>) {
 
     Application.parseArgs(args);
 
-    SpringApplication.run(Application::class.java)
+    val app = SpringApplication(Application::class.java)
+    app.setBannerMode(Banner.Mode.OFF)
+    app.run()
 }
