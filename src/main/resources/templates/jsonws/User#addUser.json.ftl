@@ -36,6 +36,16 @@
         "$agreed = /user/update-agreed-to-terms-of-use": {
             "@userId": "$user.userId",
             "agreedToTermsOfUse": true
+        <#if portraitBytes??>
+        },
+        "$updated = /user/update-portrait": {
+            "@userId": "$user.userId",
+            "bytes": [
+            <#list portraitBytes as b>
+                ${b?c}<#if !b?is_last>,</#if>
+            </#list>
+            ]
+        </#if>
         }
     }
 }]

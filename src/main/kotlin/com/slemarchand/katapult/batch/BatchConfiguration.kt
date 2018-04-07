@@ -59,11 +59,6 @@ open class BatchConfiguration {
     }
 
     @Bean
-    open fun processor(): UserItemProcessor {
-        return UserItemProcessor()
-    }
-
-    @Bean
     open fun writer(invoker: JSONWebServiceInvoker, freemarkerConfiguration: freemarker.template.Configuration): UserItemWriter {
         return UserItemWriter(invoker, freemarkerConfiguration)
     }
@@ -79,11 +74,11 @@ open class BatchConfiguration {
     }
 
     @Bean
-    open fun step1(writer: UserItemWriter): Step {
+    open fun step1(processor: UserItemProcessor, writer: UserItemWriter): Step {
         return stepBuilderFactory!!.get("step1")
                 .chunk<User, User>(10)
                 .reader(reader())
-                .processor(processor())
+                .processor(processor)
                 .writer(writer)
                 .build()
     }

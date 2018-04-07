@@ -10,5 +10,6 @@ class User {
         var lastName: String? = null
         var middleName: String? = ""
         var jobTitle: String? = ""
+        var portraitBytes: Array<Byte>? = null
         var expandoBridgeAttributes: Map<String, String> = HashMap<String, String>()
 }
