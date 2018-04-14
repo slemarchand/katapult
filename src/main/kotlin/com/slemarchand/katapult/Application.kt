@@ -32,6 +32,7 @@ fun main(args: Array<String>) {
     Application.parseArgs(args);
 
     val app = SpringApplication(Application::class.java)
+    app.setLogStartupInfo(false);
     app.setBannerMode(Banner.Mode.OFF)
     app.run()
 }
