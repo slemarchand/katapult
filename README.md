@@ -1,5 +1,10 @@
 # Katapult
 Import users from CSV file into Liferay portal
+
+## Installation
+
+Download the JAR here: https://github.com/slemarchand/katapult/releases/download/0.0.1-SNAPSHOT/katapult-0.0.1-SNAPSHOT.jar.
+
 ## Usage
 ```
 Usage: katapult [options] <csv-file>
