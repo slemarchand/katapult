@@ -9,10 +9,8 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory
 import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.item.ItemReader
-import org.springframework.batch.item.file.FlatFileItemReader
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper
-import org.springframework.batch.item.file.transform.FieldSet
+import org.springframework.batch.item.file.separator.DefaultRecordSeparatorPolicy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -42,6 +40,7 @@ open class BatchConfiguration {
                 .resource(FileSystemResource(Application.parameters.path))
                 .linesToSkip(1)
                 .delimited().names(names())
+                .recordSeparatorPolicy(DefaultRecordSeparatorPolicy())
                 .fieldSetMapper(UserFieldSetMapper()).build()
     }
 
@@ -64,7 +63,7 @@ open class BatchConfiguration {
     }
 
     @Bean
-    open fun importUserJob(listener: JobCompletionNotificationListener, step1: Step): Job {
+    open fun importUserJob(listener: JobExecutionListener, step1: Step): Job {
         return jobBuilderFactory!!.get("importUserJob")
                 .incrementer(RunIdIncrementer())
                 .listener(listener)
