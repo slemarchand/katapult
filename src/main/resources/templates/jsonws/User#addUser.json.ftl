@@ -29,7 +29,7 @@
         "serviceContext": {
             "expandoBridgeAttributes": {
             <#list expandoBridgeAttributes?keys as key>
-                <@json_string key/>: <@json_string expandoBridgeAttributes[key]/>
+                <@json_string key/>: <@json_string expandoBridgeAttributes[key]/><#if !key?is_last>,</#if>
             </#list>
             }
         },
