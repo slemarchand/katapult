@@ -1,7 +1,8 @@
 # Katapult
 Import users from CSV file into Liferay portal
 ## Usage
-```Usage: katapult [options] <csv-file>
+```
+Usage: katapult [options] <csv-file>
   Options:
   * -s, --server
       The server base URL
@@ -15,4 +16,5 @@ Import users from CSV file into Liferay portal
       (TLS) By default, every SSL connection katapult makes is verified to be 
       secure. This option allows katapult to proceed and operate even for 
       server connections otherwise considered insecure
-      Default: false```
+      Default: false
+```
