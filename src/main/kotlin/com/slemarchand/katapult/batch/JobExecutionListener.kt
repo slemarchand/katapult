@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class JobCompletionNotificationListener
+class JobExecutionListener
 
     @Autowired
     constructor() : JobExecutionListenerSupport() {
@@ -21,6 +21,6 @@ class JobCompletionNotificationListener
 
     companion object {
 
-        private val log = LoggerFactory.getLogger(JobCompletionNotificationListener::class.java)
+        private val log = LoggerFactory.getLogger(JobExecutionListener::class.java)
     }
 }
