@@ -137,14 +137,6 @@
                     </properties>
                 </configuration>
                 <dependencies>
-                    <!--
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>${junit-platform.version}</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                    -->
                     <dependency>
                         <groupId>org.junit.jupiter</groupId>
                         <artifactId>junit-jupiter-api</artifactId>
