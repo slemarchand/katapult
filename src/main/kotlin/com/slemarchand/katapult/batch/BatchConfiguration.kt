@@ -34,17 +34,21 @@ open class BatchConfiguration {
 
     @Bean
     open fun reader(): ItemReader<User> {
+        return reader(Application.parameters)
+    }
+
+    fun reader(parameters: Parameters): ItemReader<User> {
 
         return FlatFileItemReaderBuilder<User>()
                 .name("userItemReader")
-                .resource(FileSystemResource(Application.parameters.path))
+                .resource(FileSystemResource(parameters.path))
                 .linesToSkip(1)
                 .delimited().names(names())
                 .recordSeparatorPolicy(DefaultRecordSeparatorPolicy())
                 .fieldSetMapper(UserFieldSetMapper()).build()
     }
 
-    protected fun names(): Array<String> {
+    protected open fun names(): Array<String> {
 
         val file = File(Application.parameters.path)
 
