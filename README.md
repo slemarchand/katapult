@@ -2,6 +2,7 @@
 Import users from CSV file into Liferay portal
 
 [![Build Status](https://travis-ci.org/slemarchand/katapult.svg?branch=master)](https://travis-ci.org/slemarchand/katapult)
+[![codecov](https://codecov.io/gh/slemarchand/katapult/branch/master/graph/badge.svg)](https://codecov.io/gh/slemarchand/katapult)
 
 ## Installation
 
