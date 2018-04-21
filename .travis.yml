@@ -1,4 +1,4 @@
 language: java
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  
+  - ./mvnw com.gavinmogan:codacy-maven-plugin:coverage -DcoverageReportFile=target/site/jacoco/jacoco.xml -DprojectToken=1bd2cde9ed6b4139b903fbb7f4165940 -DapiToken=qz6nMmDFSbOveUVlJBAB
