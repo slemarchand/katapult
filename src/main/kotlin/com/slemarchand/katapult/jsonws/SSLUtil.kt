@@ -1,3 +1,4 @@
+package com.slemarchand.katapult.jsonws
 
 import java.security.NoSuchAlgorithmException
 import java.security.KeyManagementException
