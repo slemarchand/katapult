@@ -11,7 +11,7 @@ class BatchConfigurationTest {
         parameters.path = "/some/path"
         val batchConfiguration = object: BatchConfiguration() {
 
-            override fun names(): Array<String> {
+            override fun names(parameters: Parameters): Array<String> {
                 return arrayOf("someField")
             }
         }

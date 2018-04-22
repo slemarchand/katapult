@@ -33,24 +33,25 @@ open class BatchConfiguration {
     var stepBuilderFactory: StepBuilderFactory? = null
 
     @Bean
-    open fun reader(): ItemReader<User> {
-        return reader(KatapultApplication.parameters)
+    open fun parameters(): Parameters {
+        return KatapultApplication.parameters
     }
 
-    fun reader(parameters: Parameters): ItemReader<User> {
+    @Bean
+    open fun reader(parameters: Parameters): ItemReader<User> {
 
         return FlatFileItemReaderBuilder<User>()
                 .name("userItemReader")
                 .resource(FileSystemResource(parameters.path))
                 .linesToSkip(1)
-                .delimited().names(names())
+                .delimited().names(names(parameters))
                 .recordSeparatorPolicy(DefaultRecordSeparatorPolicy())
                 .fieldSetMapper(UserFieldSetMapper()).build()
     }
 
-    protected open fun names(): Array<String> {
+    protected open fun names(parameters: Parameters): Array<String> {
 
-        val file = File(KatapultApplication.parameters.path)
+        val file = File(parameters.path)
 
         val reader = BufferedReader(FileReader(file))
 
@@ -77,10 +78,10 @@ open class BatchConfiguration {
     }
 
     @Bean
-    open fun step1(processor: UserItemProcessor, writer: UserItemWriter): Step {
+    open fun step1(reader: ItemReader<User>, processor: UserItemProcessor, writer: UserItemWriter, parameters: Parameters): Step {
         return stepBuilderFactory!!.get("step1")
                 .chunk<User, User>(10)
-                .reader(reader())
+                .reader(reader)
                 .processor(processor)
                 .writer(writer)
                 .build()
