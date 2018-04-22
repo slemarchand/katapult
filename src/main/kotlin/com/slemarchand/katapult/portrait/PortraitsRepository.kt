@@ -1,6 +1,6 @@
 package com.slemarchand.katapult.portrait
 
-import com.slemarchand.katapult.Application
+import com.slemarchand.katapult.KatapultApplication
 import org.springframework.stereotype.Component
 import java.io.File
 
@@ -12,7 +12,7 @@ class PortraitsRepository {
     val available: Boolean
 
     constructor() {
-        portraitsDirectory = File(File(Application.parameters.path).parentFile, "portraits")
+        portraitsDirectory = File(File(KatapultApplication.parameters.path).parentFile, "portraits")
         available = portraitsDirectory.exists() || portraitsDirectory.isDirectory()
     }
 

@@ -1,6 +1,6 @@
 package com.slemarchand.katapult.jsonws
 
-import com.slemarchand.katapult.Application
+import com.slemarchand.katapult.KatapultApplication
 import com.slemarchand.katapult.batch.UserItemWriter
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
@@ -20,7 +20,7 @@ open class JSONWebServiceInvoker {
     constructor(restTemplate: RestTemplate) {
         this.restTemplate  = restTemplate
 
-        if(Application.parameters.insecure) {
+        if(KatapultApplication.parameters.insecure) {
             SSLUtil.acceptInsecureConnections()
         }
     }
@@ -31,13 +31,13 @@ open class JSONWebServiceInvoker {
 
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val user = Application.parameters.user!!
+        val user = KatapultApplication.parameters.user!!
 
-        val password = Application.parameters.password!!
+        val password = KatapultApplication.parameters.password!!
 
         headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString("${user}:${password}".toByteArray(Charset.defaultCharset())))
 
-        val url = "${Application.parameters.server}/api/jsonws/invoke"
+        val url = "${KatapultApplication.parameters.server}/api/jsonws/invoke"
 
         val entity = HttpEntity(json, headers)
 

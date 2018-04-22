@@ -34,7 +34,7 @@ open class BatchConfiguration {
 
     @Bean
     open fun reader(): ItemReader<User> {
-        return reader(Application.parameters)
+        return reader(KatapultApplication.parameters)
     }
 
     fun reader(parameters: Parameters): ItemReader<User> {
@@ -50,7 +50,7 @@ open class BatchConfiguration {
 
     protected open fun names(): Array<String> {
 
-        val file = File(Application.parameters.path)
+        val file = File(KatapultApplication.parameters.path)
 
         val reader = BufferedReader(FileReader(file))
 

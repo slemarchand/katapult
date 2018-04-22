@@ -32,8 +32,8 @@
     <properties>
         <java.version>1.8</java.version>
         <kotlin.version>1.2.31</kotlin.version>
-        <junit-platform.version>1.2.0-M1</junit-platform.version>
-        <junit-jupiter.version>5.2.0-M1</junit-jupiter.version>
+        <junit-platform.version>1.1.1</junit-platform.version>
+        <junit-jupiter.version>5.1.1</junit-jupiter.version>
     </properties>
 
     <dependencies>
@@ -97,6 +97,18 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
             <version>${junit-jupiter.version}</version>
+        </dependency>
+        <!-- Other test dependencies -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.9.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.18.3</version>
         </dependency>
     </dependencies>
 

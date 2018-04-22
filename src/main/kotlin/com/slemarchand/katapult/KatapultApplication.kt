@@ -5,15 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.ParameterException
 import org.springframework.boot.Banner
-import org.springframework.boot.autoconfigure.batch.BasicBatchConfigurer
-import org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 import kotlin.system.exitProcess
 
 @SpringBootApplication
-open class Application {
+open class KatapultApplication {
 
     companion object CommandLine {
 
@@ -34,9 +29,9 @@ open class Application {
 fun main(args: Array<String>) {
 
     try {
-        Application.parseArgs(args);
+        KatapultApplication.parseArgs(args);
 
-        val app = SpringApplication(Application::class.java)
+        val app = SpringApplication(KatapultApplication::class.java)
         app.setLogStartupInfo(false)
         app.setBannerMode(Banner.Mode.OFF)
         app.run()

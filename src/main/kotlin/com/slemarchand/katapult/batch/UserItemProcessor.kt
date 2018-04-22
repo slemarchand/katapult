@@ -1,6 +1,6 @@
 package com.slemarchand.katapult.batch
 
-import com.slemarchand.katapult.Application
+import com.slemarchand.katapult.KatapultApplication
 import com.slemarchand.katapult.batch.model.User
 import com.slemarchand.katapult.portrait.PortraitsRepository
 import org.slf4j.LoggerFactory
@@ -20,7 +20,7 @@ class UserItemProcessor : ItemProcessor<User, User> {
     @Throws(Exception::class)
     override fun process(user: User): User {
 
-        user.companyId = Application.parameters.companyId!!
+        user.companyId = KatapultApplication.parameters.companyId!!
 
         user.portraitBytes = portraitsRepository.getPortraitBytes(user.screenName!!)
 
