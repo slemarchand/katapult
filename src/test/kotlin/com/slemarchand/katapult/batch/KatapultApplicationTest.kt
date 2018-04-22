@@ -43,7 +43,8 @@ class KatapultApplicationTest {
                 "-c","100034",
                 "-s","http://someserver.com",
                 "-u","user",
-                "-p","pass")
+                "-p","pass",
+                "-k")
 
         try {
 
@@ -60,5 +61,6 @@ class KatapultApplicationTest {
         assertEquals("http://someserver.com", params.server)
         assertEquals("user", params.user)
         assertEquals("pass", params.password)
+        assertTrue(params.insecure)
     }
 }
