@@ -6,7 +6,9 @@ Import users from CSV file into Liferay portal
 
 ## Installation
 
-Download the JAR here: https://github.com/slemarchand/katapult/releases/download/0.0.1-SNAPSHOT/katapult-0.0.1-SNAPSHOT.jar.
+1. Download the binary distribution here: https://github.com/slemarchand/katapult/releases
+2. Extract the archive where you want to install Katapult
+3. Add the new created directory to your executable path
 
 ## Usage
 ```
