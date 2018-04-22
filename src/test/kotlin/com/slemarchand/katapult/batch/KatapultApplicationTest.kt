@@ -21,4 +21,18 @@ class KatapultApplicationTest {
 
         } catch (e: ParameterException) {}
     }
+
+    @Test
+    fun testParseArgs_unknown_parameter() {
+
+        val args = arrayOf("/some/path","--unknown-parameter")
+
+        try {
+
+            KatapultApplication.CommandLine.parseArgs(args)
+
+            fail<Any>("ParameterException must be thrown")
+
+        } catch (e: ParameterException) {}
+    }
 }
