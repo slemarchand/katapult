@@ -19,6 +19,9 @@ class UserFieldSetMapperTest {
 
     @Test
     open fun testExtractAllBeanCollectionFields () {
+
+        init()
+
         val names = arrayOf(
                 "phone[0].extension", "phone[0].number",
                 "phone[1].extension", "phone[1].number",
@@ -58,6 +61,8 @@ class UserFieldSetMapperTest {
     @Test
     open fun testMapBeanCollection () {
 
+        init()
+
         val input : MutableMap<String, MutableMap<String, String>> = mutableMapOf(
             "00" to mutableMapOf(
                 "extension" to "+33",
@@ -86,6 +91,8 @@ class UserFieldSetMapperTest {
 
     @Test
     open fun testRemoveDotNotationFields () {
+
+        init()
 
         val fs = DefaultFieldSet(
                 arrayOf("elton","0102030405","j"),
