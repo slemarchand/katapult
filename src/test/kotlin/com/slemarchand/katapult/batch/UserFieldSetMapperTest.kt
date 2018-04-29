@@ -10,10 +10,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper
-import org.springframework.batch.item.file.mapping.FieldSetMapper
-import org.springframework.batch.item.file.transform.FieldSet
-import javax.print.DocFlavor
 
 class UserFieldSetMapperTest {
 
@@ -59,6 +55,26 @@ class UserFieldSetMapperTest {
     }
 
     @Test
+    fun testSuperMapFieldSet () {
+        val names = arrayOf(
+                "screenName",
+                "emailAddress"
+                )
+
+        val tokens = arrayOf(
+                "edgar",
+                "edgar@motorcycle.zz")
+
+        val user = mapper.superMapFieldSet(DefaultFieldSet(
+                tokens,
+                names))
+
+        assertNotNull(user)
+        assertEquals("edgar", user.screenName)
+        assertEquals("edgar@motorcycle.zz", user.emailAddress)
+    }
+
+    @Test
     fun testExtractAllBeanCollectionFields () {
 
         val names = arrayOf(
@@ -66,8 +82,8 @@ class UserFieldSetMapperTest {
                 "phone[1].extension", "phone[1].number",
                 "phone[3].extension", "phone[3].number",
                 "anyComposite[anyKey].someField",
-                "emailAddress",
-                "screenName")
+                "screenName",
+                "emailAddress")
 
         val tokens = arrayOf(
                 "+33", "6 54 32 10 00",
@@ -98,6 +114,16 @@ class UserFieldSetMapperTest {
     }
 
     @Test
+    fun testExtractAllBeanCollectionFields_empty_field_set () {
+
+        val data = mapper.extractAllBeanCollectionFields(DefaultFieldSet(
+                arrayOf(),
+                arrayOf()))
+
+        assertEquals(0, data.size)
+    }
+
+        @Test
     open fun testMapBeanCollection () {
 
         val input : MutableMap<String, MutableMap<String, String>> = mutableMapOf(
@@ -162,7 +188,7 @@ class UserFieldSetMapperTest {
     }
 
     @Test
-    open fun testRemoveDotNotationFields () {
+    open fun testRemoveFields_dot_notation_fields () {
 
         val fs = DefaultFieldSet(
                 arrayOf("elton","0102030405","j"),
@@ -176,13 +202,27 @@ class UserFieldSetMapperTest {
     }
 
     @Test
-    open fun testRemoveDotNotationFields_no_dot_notation_field () {
+    open fun testRemoveFields_no_dot_notation_field () {
 
         val fs = DefaultFieldSet(
                 arrayOf("elton","j"),
                 arrayOf("screenName","lastName"))
 
         val newfs = mapper.removeFields(fs, { name, value -> name.contains('.') })
+
+        assertArrayEquals(fs.names, newfs!!.names)
+        assertArrayEquals(fs.values, newfs!!.values)
+
+    }
+
+    @Test
+    open fun testRemoveFields_nothing_to_remove () {
+
+        val fs = DefaultFieldSet(
+                arrayOf("elton","j"),
+                arrayOf("screenName","lastName"))
+
+        val newfs = mapper.removeFields(fs, null)
 
         assertArrayEquals(fs.names, newfs!!.names)
         assertArrayEquals(fs.values, newfs!!.values)

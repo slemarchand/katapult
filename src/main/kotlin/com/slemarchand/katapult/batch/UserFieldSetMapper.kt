@@ -47,7 +47,7 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
 
         val newNames = LinkedList<String>()
 
-        for(i in 0.. names.size - 1) {
+        for(i in 0 until names.size) {
 
             val name = names[i]
             val token = tokens[i]
