@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper
 import org.springframework.batch.item.file.transform.DefaultFieldSet
 import org.springframework.batch.item.file.transform.FieldSet
-import org.springframework.validation.DataBinder
 import java.util.*
-import kotlin.reflect.KClass
 
 open class UserFieldSetMapper:  BeanWrapperFieldSetMapper<User> {
 
@@ -19,19 +17,15 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         setStrict(false)
     }
 
-    override fun createBinder(target: Any?): DataBinder {
-        return super.createBinder(target)
-    }
-
     override fun mapFieldSet(fs: FieldSet?): User {
 
         val expandoAttributes = extractExpandoAttributes(fs);
 
         val compositeCollectionFields  = extractAllBeanCollectionFields(fs);
 
-        val simpleFieldSet = removeDotNotationFields(fs)
+        val simpleFieldSet = removeFields(fs, { name, value -> name.contains('.') })
 
-        val user = super.mapFieldSet(simpleFieldSet)
+        val user = superMapFieldSet(simpleFieldSet)
 
         user.phones = mapBeanCollection(compositeCollectionFields.get("phones"), Phone::class.java)
 
@@ -40,7 +34,10 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         return user;
     }
 
-    fun removeDotNotationFields(fs: FieldSet?): FieldSet? {
+    open fun superMapFieldSet(simpleFieldSet: FieldSet?) =
+            super.mapFieldSet(simpleFieldSet)
+
+    open fun removeFields(fs: FieldSet?, toBeRemoved: ((name:  String, token: String) -> Boolean)?): FieldSet? {
 
         val tokens = fs!!.values
 
@@ -53,10 +50,10 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         for(i in 0.. names.size - 1) {
 
             val name = names[i]
-
-            if(!name.contains('.')) {
+            val token = tokens[i]
+            if(toBeRemoved == null || !toBeRemoved.invoke(name, token)) {
                 newNames.add(name)
-                newTokens.add(tokens[i])
+                newTokens.add(token)
             }
         }
 
@@ -73,8 +70,8 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         return result
     }
 
-    fun extractExpandoAttributes(fs: FieldSet?): Map<String, String> {
-        
+    open fun extractExpandoAttributes(fs: FieldSet?): Map<String, String> {
+
         val attrs = HashMap<String, String>()
 
         fs!!.properties.forEach({
@@ -92,7 +89,7 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         return attrs
     }
 
-    fun extractAllBeanCollectionFields(fs: FieldSet?): MutableMap<String, MutableMap<String, MutableMap<String, String>>> {
+    open fun extractAllBeanCollectionFields(fs: FieldSet?): MutableMap<String, MutableMap<String, MutableMap<String, String>>> {
 
         val result = HashMap<String, MutableMap<String, MutableMap<String, String>>>()
 
@@ -135,7 +132,7 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         return result
     }
 
-    fun <T>mapBeanCollection(data: MutableMap<String, MutableMap<String, String>> ?, clazz: Class<T>) : List<T> {
+    open fun <T>mapBeanCollection(data: MutableMap<String, MutableMap<String, String>> ?, clazz: Class<T>) : List<T> {
 
         val result = LinkedList<T>()
 

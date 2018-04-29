@@ -1,12 +1,19 @@
 package com.slemarchand.katapult.batch
 
 import com.slemarchand.katapult.batch.model.Phone
+import com.slemarchand.katapult.batch.model.User
+import info.solidsoft.mockito.java8.LambdaMatcher.argLambda
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.batch.item.file.transform.DefaultFieldSet
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.*
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper
+import org.springframework.batch.item.file.mapping.FieldSetMapper
+import org.springframework.batch.item.file.transform.FieldSet
+import javax.print.DocFlavor
 
 class UserFieldSetMapperTest {
 
@@ -18,7 +25,41 @@ class UserFieldSetMapperTest {
     }
 
     @Test
-    open fun testExtractAllBeanCollectionFields () {
+    fun testMapFieldSet () {
+
+        val fs = DefaultFieldSet(arrayOf(), arrayOf())
+
+
+       val mapper = mock(UserFieldSetMapper::class.java)
+
+        `when`(mapper.extractExpandoAttributes(any())).thenReturn(mutableMapOf())
+        `when`(mapper.extractAllBeanCollectionFields(any())).thenReturn(mutableMapOf())
+        `when`(mapper.removeFields(any(), argLambda({ _: Any -> anyBoolean() }))).thenReturn(fs)
+        `when`(mapper.mapBeanCollection(mutableMapOf(), Phone::class.java)).thenReturn(listOf())
+        `when`(mapper.superMapFieldSet(any())).thenReturn(User())
+
+        `when`(mapper.mapFieldSet(any())).thenCallRealMethod()
+
+        val user = mapper.mapFieldSet(fs)
+
+        verify(mapper).extractExpandoAttributes(any())
+        verify(mapper).extractAllBeanCollectionFields(any())
+        verify(mapper).removeFields(any(), any())
+        verify(mapper).superMapFieldSet(any())
+        verify(mapper).mapBeanCollection(any(), eq(Phone::class.java))
+
+    }
+
+    fun <T>eq(value: T): T  {
+        var result = ArgumentMatchers.eq(value)
+        if(result == null) {
+            result = value
+        }
+        return result
+    }
+
+    @Test
+    fun testExtractAllBeanCollectionFields () {
 
         val names = arrayOf(
                 "phone[0].extension", "phone[0].number",
@@ -86,6 +127,27 @@ class UserFieldSetMapperTest {
     }
 
     @Test
+    open fun testMapBeanCollection_empty_fields () {
+
+        val input : MutableMap<String, MutableMap<String, String>> = mutableMapOf(
+                "0" to mutableMapOf(
+                        "extension" to "",
+                        "number" to ""
+                ),
+                "02" to mutableMapOf(
+                        "extension" to "+44",
+                        "number" to "222")
+        )
+
+        val list = mapper.mapBeanCollection(input, Phone::class.java)
+
+        assertEquals(1, list.size)
+
+        assertEquals("+44", list.get(0).extension)
+        assertEquals("222", list.get(0).number)
+    }
+
+    @Test
     open fun testExtractExpandoAttributes () {
 
         val fs = DefaultFieldSet(
@@ -106,10 +168,24 @@ class UserFieldSetMapperTest {
                 arrayOf("elton","0102030405","j"),
                 arrayOf("screenName", "phone[0].number","lastName"))
 
-        val newfs = mapper.removeDotNotationFields(fs)
+        val newfs = mapper.removeFields(fs, { name, value -> name.contains('.') })
 
         assertArrayEquals(arrayOf("screenName","lastName"), newfs!!.names)
         assertArrayEquals(arrayOf("elton","j"), newfs!!.values)
+
+    }
+
+    @Test
+    open fun testRemoveDotNotationFields_no_dot_notation_field () {
+
+        val fs = DefaultFieldSet(
+                arrayOf("elton","j"),
+                arrayOf("screenName","lastName"))
+
+        val newfs = mapper.removeFields(fs, { name, value -> name.contains('.') })
+
+        assertArrayEquals(fs.names, newfs!!.names)
+        assertArrayEquals(fs.values, newfs!!.values)
 
     }
 }
