@@ -73,8 +73,8 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         return result
     }
 
-    protected fun extractExpandoAttributes(fs: FieldSet?): Map<String, String> {
-
+    fun extractExpandoAttributes(fs: FieldSet?): Map<String, String> {
+        
         val attrs = HashMap<String, String>()
 
         fs!!.properties.forEach({

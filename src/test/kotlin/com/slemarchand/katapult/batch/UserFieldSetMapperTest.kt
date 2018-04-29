@@ -86,6 +86,20 @@ class UserFieldSetMapperTest {
     }
 
     @Test
+    open fun testExtractExpandoAttributes () {
+
+        val fs = DefaultFieldSet(
+                arrayOf("elton","val1", "val2"),
+                arrayOf("screenName", "expando:name1","expando:name2"))
+
+        val attrs = mapper.extractExpandoAttributes(fs)
+
+        assertEquals(2, attrs.size)
+        assertEquals("val1", attrs.get("name1"))
+        assertEquals("val2", attrs.get("name2"))
+    }
+
+    @Test
     open fun testRemoveDotNotationFields () {
 
         val fs = DefaultFieldSet(
