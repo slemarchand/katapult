@@ -25,6 +25,20 @@
         "organizationIds": null,
         "roleIds": null,
         "userGroupIds": null,
+        "addresses": [],
+        "emailAddresses": [],
+        "phones": [
+        <#list phones as phone>
+            {
+                "extension": <@json_string phone.extension/>,
+                "number": <@json_string phone.number/>,
+                "typeId": ${phone.typeId?c},
+                "primary": ${phone.primary?c}
+            }<#if !phone?is_last>,</#if>
+        </#list>
+        ],
+        "websites": [],
+        "announcementsDelivers": [],
         "sendEmail": false,
         "serviceContext": {
             "expandoBridgeAttributes": {
