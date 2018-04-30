@@ -188,6 +188,30 @@ class UserFieldSetMapperTest {
     }
 
     @Test
+    open fun testExtractExpandoAttributes_empty_field_set () {
+
+        val fs = DefaultFieldSet(
+                arrayOf(),
+                arrayOf())
+
+        val attrs = mapper.extractExpandoAttributes(fs)
+
+        assertEquals(0, attrs.size)
+    }
+
+    @Test
+    open fun testExtractExpandoAttributes_empty_key () {
+
+        val fs = DefaultFieldSet(
+                arrayOf("elton"),
+                arrayOf(""))
+
+        val attrs = mapper.extractExpandoAttributes(fs)
+
+        assertEquals(0, attrs.size)
+    }
+
+    @Test
     open fun testRemoveFields_dot_notation_fields () {
 
         val fs = DefaultFieldSet(
@@ -221,6 +245,20 @@ class UserFieldSetMapperTest {
         val fs = DefaultFieldSet(
                 arrayOf("elton","j"),
                 arrayOf("screenName","lastName"))
+
+        val newfs = mapper.removeFields(fs, null)
+
+        assertArrayEquals(fs.names, newfs!!.names)
+        assertArrayEquals(fs.values, newfs!!.values)
+
+    }
+
+    @Test
+    open fun testRemoveFields_empty_field_set () {
+
+        val fs = DefaultFieldSet(
+                arrayOf(),
+                arrayOf())
 
         val newfs = mapper.removeFields(fs, null)
 
