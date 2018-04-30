@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper
 import org.springframework.batch.item.file.transform.DefaultFieldSet
 import org.springframework.batch.item.file.transform.FieldSet
+import org.springframework.beans.NotWritablePropertyException
 import java.util.*
 
 open class UserFieldSetMapper:  BeanWrapperFieldSetMapper<User> {
@@ -14,7 +15,6 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
 
     constructor() {
         setTargetType(User::class.java)
-        setStrict(false)
     }
 
     override fun mapFieldSet(fs: FieldSet?): User {
@@ -23,7 +23,9 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
 
         val compositeCollectionFields  = extractAllBeanCollectionFields(fs);
 
-        val simpleFieldSet = removeFields(fs, { name, value -> name.contains('.') })
+        val simpleFieldSet = removeFields(fs, { name, value ->
+            name.startsWith("expando:")
+                    || name.startsWith("phones[") })
 
         val user = superMapFieldSet(simpleFieldSet)
 
@@ -102,6 +104,10 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
             if(openingBracketIndex != -1) {
 
                 val closingBracketIndex = key.indexOf(']')
+
+                if(closingBracketIndex == -1) {
+                    throw NotWritablePropertyException(User::class.java, key)
+                }
 
                 val typeName = key.substring(0, openingBracketIndex)
 

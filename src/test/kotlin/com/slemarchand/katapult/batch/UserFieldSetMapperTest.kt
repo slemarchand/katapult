@@ -6,10 +6,12 @@ import info.solidsoft.mockito.java8.LambdaMatcher.argLambda
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.batch.item.file.transform.DefaultFieldSet
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
+import org.springframework.beans.NotWritablePropertyException
 
 class UserFieldSetMapperTest {
 
@@ -46,6 +48,27 @@ class UserFieldSetMapperTest {
 
     }
 
+    @Test
+    fun testMapFieldSet_end_to_end () {
+
+        val fs = DefaultFieldSet(arrayOf(
+            "boby", "boby@hello.zz","someExpandoValue","0102030405"
+        ), arrayOf(
+            "screenName", "emailAdress","expando:someCustomField", "phones[1].number"
+        ))
+
+        val user = mapper.mapFieldSet(fs)
+
+        assertEquals("boby", user.screenName)
+        assertEquals("boby@hello.zz", user.emailAddress)
+        assertNotNull(user.expandoBridgeAttributes)
+        assertEquals("someExpandoValue", user.expandoBridgeAttributes["someCustomField"])
+        assertNotNull(user.phones)
+        assertEquals(1, user.phones.size)
+        assertNotNull(user.phones[0])
+        assertEquals("0102030405", user.phones[0].number)
+    }
+
     fun <T>eq(value: T): T  {
         var result = ArgumentMatchers.eq(value)
         if(result == null) {
@@ -55,7 +78,35 @@ class UserFieldSetMapperTest {
     }
 
     @Test
+    fun testMapFieldSet_end_to_end_bad_field_names () {
+
+        fun testBadFieldName(badFieldName: String) {
+            try {
+                mapper.mapFieldSet(DefaultFieldSet(arrayOf(
+                        "boby", "boby@hello.zz", "value"
+                ), arrayOf(
+                        "screenName", "emailAdress", badFieldName
+                )))
+
+                fail<Any>("<${badFieldName}> field name  should be rejected")
+
+            } catch (e: NotWritablePropertyException) {
+                /* Expected exception */
+            }
+        }
+
+        testBadFieldName("randomFieldName")
+
+        testBadFieldName("phones[9].unknown")
+
+        testBadFieldName("phones[fffff")
+
+        testBadFieldName("phones[7]df")
+    }
+
+    @Test
     fun testSuperMapFieldSet () {
+
         val names = arrayOf(
                 "screenName",
                 "emailAddress"
