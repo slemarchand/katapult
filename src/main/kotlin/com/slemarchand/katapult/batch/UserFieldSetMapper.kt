@@ -11,7 +11,7 @@ import java.util.*
 
 open class UserFieldSetMapper:  BeanWrapperFieldSetMapper<User> {
 
-val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out Any>> = HashMap()
+    private val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out Any>> = HashMap()
 
     constructor() {
         setTargetType(User::class.java)
@@ -97,7 +97,7 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
 
         fs.properties.forEach({
 
-            val key = it.key.toString()
+            val key: String = it.key.toString()
 
             val openingBracketIndex = key.indexOf('[')
 
@@ -144,15 +144,15 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
 
         if (data != null) {
 
-            val keys = LinkedList(data.keys)
+            val entries = LinkedList(data.entries)
 
-            keys.sort()
+            entries.sortBy { it.key}
 
-            for (it in keys) {
+            for (it in entries) {
 
-                val properties = data.get(it)
+                val properties = it.value
 
-                if (properties == null || properties.values.filter { it != null && it.trim().isNotEmpty() }.isEmpty()) {
+                if (properties.values.filter { it.isNotEmpty() }.isEmpty()) {
                     continue
                 }
 

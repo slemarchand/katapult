@@ -210,7 +210,7 @@ class UserFieldSetMapperTest {
     }
 
     @Test
-    open fun testMapBeanCollection_empty_fields () {
+    open fun testMapBeanCollection_some_empty_fields () {
 
         val input : MutableMap<String, MutableMap<String, String>> = mutableMapOf(
                 "0" to mutableMapOf(
@@ -228,6 +228,14 @@ class UserFieldSetMapperTest {
 
         assertEquals("+44", list.get(0).extension)
         assertEquals("222", list.get(0).number)
+    }
+
+    @Test
+    open fun testMapBeanCollection_null_parameters () {
+
+        val list = mapper.mapBeanCollection(null, Phone::class.java)
+
+        assertEquals(0, list.size)
     }
 
     @Test
