@@ -17,7 +17,7 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         setTargetType(User::class.java)
     }
 
-    override fun mapFieldSet(fs: FieldSet?): User {
+    override fun mapFieldSet(fs: FieldSet): User {
 
         val expandoAttributes = extractExpandoAttributes(fs);
 
@@ -36,14 +36,14 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         return user;
     }
 
-    open fun superMapFieldSet(simpleFieldSet: FieldSet?) =
+    open fun superMapFieldSet(simpleFieldSet: FieldSet) =
             super.mapFieldSet(simpleFieldSet)
 
-    open fun removeFields(fs: FieldSet?, toBeRemoved: ((name:  String, token: String) -> Boolean)?): FieldSet? {
+    open fun removeFields(fs: FieldSet, toBeRemoved: ((name:  String, token: String) -> Boolean)?): FieldSet {
 
-        val tokens = fs!!.values
+        val tokens = fs.values
 
-        val names = fs!!.names
+        val names = fs.names
 
         val newTokens = LinkedList<String>()
 
@@ -72,11 +72,11 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         return result
     }
 
-    open fun extractExpandoAttributes(fs: FieldSet?): Map<String, String> {
+    open fun extractExpandoAttributes(fs: FieldSet): Map<String, String> {
 
         val attrs = HashMap<String, String>()
 
-        fs!!.properties.forEach({
+        fs.properties.forEach({
 
             val key = it.key.toString()
 
@@ -91,11 +91,11 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
         return attrs
     }
 
-    open fun extractAllBeanCollectionFields(fs: FieldSet?): MutableMap<String, MutableMap<String, MutableMap<String, String>>> {
+    open fun extractAllBeanCollectionFields(fs: FieldSet): MutableMap<String, MutableMap<String, MutableMap<String, String>>> {
 
         val result = HashMap<String, MutableMap<String, MutableMap<String, String>>>()
 
-        fs!!.properties.forEach({
+        fs.properties.forEach({
 
             val key = it.key.toString()
 

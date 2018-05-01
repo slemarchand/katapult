@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
+import org.springframework.batch.item.file.transform.FieldSet
 import org.springframework.beans.NotWritablePropertyException
 
 class UserFieldSetMapperTest {
@@ -30,20 +31,25 @@ class UserFieldSetMapperTest {
 
        val mapper = mock(UserFieldSetMapper::class.java)
 
-        `when`(mapper.extractExpandoAttributes(any())).thenReturn(mutableMapOf())
-        `when`(mapper.extractAllBeanCollectionFields(any())).thenReturn(mutableMapOf())
-        `when`(mapper.removeFields(any(), argLambda({ _: Any -> anyBoolean() }))).thenReturn(fs)
-        `when`(mapper.mapBeanCollection(mutableMapOf(), Phone::class.java)).thenReturn(listOf())
-        `when`(mapper.superMapFieldSet(any())).thenReturn(User())
+        fun anyFieldSet(): FieldSet {
+            any<FieldSet>()
+            return DefaultFieldSet(arrayOf(), arrayOf())
+        }
 
-        `when`(mapper.mapFieldSet(any())).thenCallRealMethod()
+        `when`(mapper.extractExpandoAttributes(anyFieldSet())).thenReturn(mutableMapOf())
+        `when`(mapper.extractAllBeanCollectionFields(anyFieldSet())).thenReturn(mutableMapOf())
+        `when`(mapper.removeFields(anyFieldSet(), argLambda({ _: Any -> anyBoolean() }))).thenReturn(fs)
+        `when`(mapper.mapBeanCollection(mutableMapOf(), Phone::class.java)).thenReturn(listOf())
+        `when`(mapper.superMapFieldSet(anyFieldSet())).thenReturn(User())
+
+        `when`(mapper.mapFieldSet(anyFieldSet())).thenCallRealMethod()
 
         val user = mapper.mapFieldSet(fs)
 
-        verify(mapper).extractExpandoAttributes(any())
-        verify(mapper).extractAllBeanCollectionFields(any())
-        verify(mapper).removeFields(any(), any())
-        verify(mapper).superMapFieldSet(any())
+        verify(mapper).extractExpandoAttributes(anyFieldSet())
+        verify(mapper).extractAllBeanCollectionFields(anyFieldSet())
+        verify(mapper).removeFields(anyFieldSet(), any())
+        verify(mapper).superMapFieldSet(anyFieldSet())
         verify(mapper).mapBeanCollection(any(), eq(Phone::class.java))
 
     }
