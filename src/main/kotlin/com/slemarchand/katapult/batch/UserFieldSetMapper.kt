@@ -144,15 +144,15 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
 
         if (data != null) {
 
-            val keys = LinkedList(data!!.keys)
+            val keys = LinkedList(data.keys)
 
             keys.sort()
 
             for (it in keys) {
 
-                val properties = data!!.get(it)!!
+                val properties = data.get(it)
 
-                if (properties.values.filter { it != null && it.trim().isNotEmpty() }.isEmpty()) {
+                if (properties == null || properties.values.filter { it != null && it.trim().isNotEmpty() }.isEmpty()) {
                     continue
                 }
 
@@ -178,7 +178,7 @@ val mappersByClass : MutableMap<Class<out Any>, BeanWrapperFieldSetMapper<out An
                     mappersByClass.put(clazz as Class<Any>, mapper)
                 }
 
-                val bean = mapper!!.mapFieldSet(fieldSet)
+                val bean = mapper.mapFieldSet(fieldSet)
 
                 result.add(bean as T)
             }

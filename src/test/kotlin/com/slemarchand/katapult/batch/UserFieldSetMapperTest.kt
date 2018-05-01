@@ -231,6 +231,24 @@ class UserFieldSetMapperTest {
     }
 
     @Test
+    open fun testMapBeanCollection_null_entry () {
+
+        val input : MutableMap<String, MutableMap<String, String>> = object: HashMap<String, MutableMap<String, String>>(){
+
+            override fun get(key: String): MutableMap<String, String>? {
+                return null
+            }
+        }
+
+        input.put("0", mutableMapOf())
+        input.put("1", mutableMapOf())
+
+        val list = mapper.mapBeanCollection(input, Phone::class.java)
+
+        assertEquals(0, list.size)
+    }
+
+    @Test
     open fun testExtractExpandoAttributes () {
 
         val fs = DefaultFieldSet(
