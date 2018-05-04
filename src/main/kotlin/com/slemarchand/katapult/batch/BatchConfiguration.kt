@@ -63,8 +63,8 @@ open class BatchConfiguration {
     }
 
     @Bean
-    open fun writer(invoker: JSONWebServiceInvoker, freemarkerConfiguration: freemarker.template.Configuration): UserItemWriter {
-        return UserItemWriter(invoker, freemarkerConfiguration)
+    open fun writer(invoker: JSONWebServiceInvoker, freemarkerConfiguration: freemarker.template.Configuration, parameters: Parameters): UserItemWriter {
+        return UserItemWriter(invoker, freemarkerConfiguration, parameters)
     }
 
     @Bean

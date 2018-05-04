@@ -8,6 +8,12 @@ class Parameters {
             description = "<csv-file>")
     var path: String? = null
 
+    @Parameter(names = arrayOf("-update", "--update-mode"),
+            hidden = true,
+            order = 40,
+            description = "Update mode")
+    var updateMode: Boolean = false
+
     @Parameter(names = arrayOf("-u", "--user"),
             required = true,
             order = 30,
