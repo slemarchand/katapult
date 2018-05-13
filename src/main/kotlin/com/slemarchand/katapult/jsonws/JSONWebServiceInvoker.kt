@@ -12,6 +12,10 @@ import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 import java.nio.charset.Charset
 import java.util.*
+import org.springframework.util.MultiValueMap
+import org.springframework.util.LinkedMultiValueMap
+
+
 
 @Component
 open class JSONWebServiceInvoker {
@@ -31,7 +35,12 @@ open class JSONWebServiceInvoker {
         }
     }
 
-    fun invoke(json: String) {
+
+    fun invoke(json: String): String? {
+        return invoke(json, String::class.java)
+    }
+
+    fun <T>invoke(json: String, responseClass: Class<T>): T?{
 
         val headers = HttpHeaders()
 
@@ -49,16 +58,41 @@ open class JSONWebServiceInvoker {
 
         val url = "${KatapultApplication.parameters.server}/api/jsonws/invoke"
 
-        val entity = HttpEntity(json, headers)
 
-        var response: String? = null
+        var response: T? = null
+
+            val wwwForm = false
+
+        var entity: Any?
+
+        if(wwwForm) {
+
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+            val data = LinkedMultiValueMap<String, String>()
+
+            data.add("cmd", json)
+
+            entity = HttpEntity<MultiValueMap<String, String>>(data, headers)
+
+
+        } else {
+
+            entity = HttpEntity(json, headers)
+
+        }
 
         try {
-            response = restTemplate.postForObject(url, entity, String::class.java)
+
+            response = restTemplate.postForObject(url, entity, responseClass)
 
         } catch (e: HttpServerErrorException) {
             log.error(e.responseBodyAsString)
+
+            throw Exception(e)
         }
+
+        return response
     }
 
     companion object {

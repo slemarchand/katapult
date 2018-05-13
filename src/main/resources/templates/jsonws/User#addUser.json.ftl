@@ -2,25 +2,25 @@
 [{
     "$user = /user/add-user": {
         "companyId": ${companyId?c},
-        "autoPassword": false,
-        "password1": <@json_string password/>,
-        "password2": <@json_string password/>,
-        "autoScreenName": false,
-        "screenName": <@json_string screenName/>,
-        "emailAddress": <@json_string emailAddress/>,
-        "facebookId": 0,
-        "openId": "",
+        "autoPassword": ${(!password?exists)?c},
+        "password1": <#if password??><@json_str password/><#else>null</#if>,
+        "password2": <#if password??><@json_str password/><#else>null</#if>,
+        "autoScreenName": ${(!screenName?exists)?c},
+        "screenName": <#if screenName??><@json_str screenName/><#else>null</#if>,
+        "emailAddress": <#if emailAddress??><@json_str emailAddress/><#else>null</#if>,
+        "facebookId": ${facebookId?c},
+        "openId": <#if openId??><@json_str openId/><#else>null</#if>,
         "locale": "en_US",
-        "firstName": <@json_string firstName/>,
-        "middleName": <@json_string middleName/>,
-        "lastName": <@json_string lastName/>,
-        "prefixId": 0,
-        "suffixId": 0,
-        "male": true,
-        "birthdayMonth": 1,
-        "birthdayDay": 1,
-        "birthdayYear": 1970,
-        "jobTitle": <@json_string jobTitle/>,
+        "firstName": <#if firstName??><@json_str firstName/><#else>null</#if>,
+        "middleName": <#if middleName??><@json_str middleName/><#else>null</#if>,
+        "lastName": <#if lastName??><@json_str lastName/><#else>null</#if>,
+        "prefixId": ${contact.prefixId?c},
+        "suffixId": ${contact.suffixId?c},
+        "male": ${contact.male?c},
+        "birthdayMonth": ${contact.birthday?string.@month},
+        "birthdayDay": ${contact.birthday?string.@day},
+        "birthdayYear": ${contact.birthday?string.@year},
+        "jobTitle": <#if contact.jobTitle??><@json_str contact.jobTitle/><#else>null</#if>,
         "groupIds": null,
         "organizationIds": null,
         "roleIds": null,
@@ -30,8 +30,8 @@
         "phones": [
         <#list phones as phone>
             {
-                "extension": <@json_string phone.extension/>,
-                "number": <@json_string phone.number/>,
+                "extension": <@json_str phone.extension/>,
+                "number": <@json_str phone.number/>,
                 "typeId": ${phone.typeId?c},
                 "primary": ${phone.primary?c}
             }<#if !phone?is_last>,</#if>
@@ -43,13 +43,13 @@
         "serviceContext": {
             "expandoBridgeAttributes": {
             <#list expandoBridgeAttributes?keys as key>
-                <@json_string key/>: <@json_string expandoBridgeAttributes[key]/><#if !key?is_last>,</#if>
+                <@json_str key/>: <@json_str expandoBridgeAttributes[key]/><#if !key?is_last>,</#if>
             </#list>
             }
         },
         "$agreed = /user/update-agreed-to-terms-of-use": {
             "@userId": "$user.userId",
-            "agreedToTermsOfUse": true
+            "agreedToTermsOfUse": ${agreedToTermsOfUse?c}
         <#if portraitBytes??>
         },
         "$updated = /user/update-portrait": {

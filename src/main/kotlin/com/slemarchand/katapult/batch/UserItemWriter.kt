@@ -4,6 +4,7 @@ import com.slemarchand.katapult.KatapultApplication
 import com.slemarchand.katapult.Parameters
 import com.slemarchand.katapult.jsonws.JSONWebServiceInvoker
 import com.slemarchand.katapult.batch.model.User
+import com.slemarchand.katapult.freemarker.Templates
 import org.slf4j.LoggerFactory
 import org.springframework.batch.item.ItemWriter;
 import freemarker.template.Configuration
@@ -30,18 +31,31 @@ class UserItemWriter : ItemWriter<User>  {
 
             log.info("Processing ${it.screenName} - ${it.emailAddress} - ${it.firstName} ${it.lastName}")
 
-            val templateKey = if(parameters.updateMode) "update" else "User#addUser"
 
-            val template =  freemarkerConfiguration.getTemplate("/jsonws/${templateKey}.json.ftl")
+            if(parameters.updateMode) {
 
-            val buffer = StringWriter()
+                val user = invoke(Templates.READ, it, Array<User>::class.java)
 
-            template?.process(it, buffer)
+                invoke(Templates.UPDATE, user!![0], String::class.java)
 
-            val requestJson = buffer.toString()
+            } else {
 
-            invoker.invoke(requestJson)
+                invoke(Templates.CREATE, it, String::class.java)
+            }
         }
+    }
+
+    private fun <T>invoke(templateName: String, user: User, responseClass: Class<T> ): T? {
+
+        val template = freemarkerConfiguration.getTemplate(templateName)
+
+        val buffer = StringWriter()
+
+        template?.process(user, buffer)
+
+        val requestJson = buffer.toString()
+
+        return invoker.invoke(requestJson, responseClass)
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package com.slemarchand.katapult.freemarker
 
+import freemarker.core.TemplateDateFormatFactory
 import freemarker.template.Configuration
 import freemarker.template.TemplateExceptionHandler
 import org.springframework.context.annotation.Bean
@@ -32,6 +33,16 @@ open class FreemarkerConfiguration {
 
         // Wrap unchecked exceptions thrown during template processing into TemplateException-s.
         cfg.setWrapUncheckedExceptions(true);
+
+        val customDateFormats = HashMap<String, TemplateDateFormatFactory>()
+
+        customDateFormats.put("day", DayDateFormatFactory)
+
+        customDateFormats.put("month", MonthDateFormatFactory)
+
+        customDateFormats.put("year", YearDateFormatFactory)
+
+        cfg.customDateFormats = customDateFormats
 
         return cfg
     }
